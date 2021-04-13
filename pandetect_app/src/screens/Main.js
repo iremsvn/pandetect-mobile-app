@@ -271,16 +271,18 @@ const styles = StyleSheet.create({
         width: "100%"
     },
     topBtnContainer: {
-        marginHorizontal: 0,
         paddingVertical: 10,
         flexDirection: "row",
-        width: "100%"
+        justifyContent: "space-between",
+        width: "100%",
+        alignItems: "center"
     },
     topUserBtn: {
         backgroundColor: "white",
         borderRadius: 10,
-        paddingHorizontal: 18,
-        width: "35%",
+        paddingHorizontal: 20,
+        marginLeft: "auto",
+        marginRight: "auto",
         flexDirection: "row",
         justifyContent: 'space-between'
     },
