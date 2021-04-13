@@ -9,27 +9,49 @@ export default class ApplicationForm extends React.Component {
         const { navigate } = this.props.navigation;
         return (
             <KeyboardAwareScrollView style={{ backgroundColor: "#FFF", height: "100%" }}>
-            <View >
+            
 
-                <View style={{
-                    flexDirection: "row",
-                    justifyContent: 'space-between',
-                    alignItems: "center",
-                    marginHorizontal: 40,
-                    marginTop: 55,
-                    paddingVertical: 2
+            <View style={{
+                    flexDirection: "row", 
+                    marginTop: 35,
+                    paddingVertical: 2,
+                    
                 }}>
-                    <Icon name="back" color="#961B92" size={24}
+                   
+                   <Icon style={{ 
+                    marginLeft: 10,
+                    marginRight: "auto",
+                    alignSelf:"center"
+                }}
+                    name="back" color="#961B92" size={24}
                         onPress={() => navigate('Login')} />
+                    
                     <Text
                         style={{
                             fontSize: 25,
                             fontFamily: "SemiBold",
-                            alignSelf: "center"
+                            marginRight: "auto",
+                            marginLeft: "auto",
+                            alignSelf:"center"
+
                         }}
                     >PANDETECT</Text>
-                    <Icon color="#961B92" size={24} />
+
+                    <Icon style={{
+                           marginRight: 10,
+                           marginLeft: "auto",
+                           alignSelf:"center"
+                       }} name="back" color="#fff" size={24}/>
+
                 </View>
+
+
+
+
+
+
+
+            <View>
 
                 <Text
                     style={{

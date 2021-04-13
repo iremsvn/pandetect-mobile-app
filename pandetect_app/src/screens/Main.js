@@ -1,73 +1,124 @@
-import React, {Component} from 'react';
-import { Text, View, Image, TextInput, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import React from 'react';
+import { Text, View, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import Icon from '@expo/vector-icons/AntDesign';
-import MapView, {Marker, Polyline, Circle, Callout} from 'react-native-maps';
-
+import MapView, { Marker, Callout } from 'react-native-maps';
 
 let points = [];
+let pointsName = [];
+let index = -1;
 
 export default class Main extends React.Component {
 
-
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             latitude: 0,
             longitude: 0,
-            error: null
+            latitudePlace: 0,
+            longitudePlace: 0,
+            error: null,
+            search: '',
         };
     }
 
-    componentDidMount() {
+
+    updateSearch = (search) => {
+        this.setState({search});
+        index = pointsName.indexOf(search.toLowerCase());
+      };
+
+    componentDidMount(position) {
         navigator.geolocation.getCurrentPosition(position => {
             this.setState({
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude,
-                error: null
+                latitudePlace: position.coords.latitude,
+                longitudePlace: position.coords.longitude,
+                error: null,
+                search: ''
             });
-        }, 
-        error => this.setState({error: error.message}),
-        {enableHighAccuracy: true, timeout: 20000, maximumAge: 2000}
+        },
+            error => this.setState({ error: error.message }),
+            { enableHighAccuracy: true, timeout: 20000, maximumAge: 2000 }
         );
     }
 
+
+
     render() {
         const { navigate } = this.props.navigation;
+        
 
-        for(let i = 0; i < 3; i++){
+        for (let i = 0; i < 3; i++) {
             points[i] = {
-              latitude: this.state.latitude + (i+1)*0.001,
-              longitude: this.state.longitude + (i+1)*0.001
+                latitude: this.state.latitude + (i + 1) * 0.05,
+                longitude: this.state.longitude + (i + 1) * 0.05
+                //latitude: 37.33233 + (i) *0.005,
+                //longitude: -122.03121  + (i) *0.005
             }
-          }
+        }
+
+        let name = 'Place'
+        for (let i = 0; i < 3; i++) {
+            pointsName[i] = 
+            name.toLowerCase() + ' ' + (i+1).toString();
+        }
+
 
         return (
             <View style={{ backgroundColor: "#FFF", height: "100%" }}>
 
                 <View style={{
-                    flexDirection: "row",
-                    justifyContent: 'space-between',
-                    alignItems: "center",
-                    marginHorizontal: 40,
+                    flexDirection: "row", 
                     marginTop: 35,
-                    paddingVertical: 2
+                    paddingVertical: 2,
+                    
                 }}>
-                    <Icon size={24} />
+                   
+                   <Icon style={{
+                           marginLeft: 10,
+                           alignSelf:"flex-end"
+                       }} name="logout" color="#fff" size={24}/>
+                    
                     <Text
                         style={{
                             fontSize: 25,
                             fontFamily: "SemiBold",
-                            alignSelf: "center"
+                            marginRight: "auto",
+                            marginLeft: "auto",
+                            alignSelf:"center"
+
                         }}
                     >PANDETECT</Text>
-                    <Icon name="logout" color="#961B92" size={24}
-                        onPress={() => navigate('Login')} />
-                </View>
+                    <Icon style={{
+                           
+                            
+                           
+                            marginRight: 10,
+                            alignSelf:"center"
 
+                        }}
+                        name="logout" color="#961B92" size={24}
+                        onPress={() =>
+                            Alert.alert(
+                                "Signing Out",
+                                "Are you sure you want to sign out?",
+                                [
+                                    {
+                                        text: "Cancel",
+                                        style: "cancel"
+                                    },
+                                    { text: "OK", onPress: () => navigate('Login') }
+                                ]
+                            )} />
+                </View>
+                               
                 <View
                     style={styles.topBtnContainer}>
                     <TouchableOpacity
                         style={styles.topUserBtn}>
+                        <Icon name="videocamera" color="#961B92" size={24}
+                            onPress={() => navigate('')} />
                         <Text
                             onPress={() => navigate('')}
 
@@ -75,6 +126,8 @@ export default class Main extends React.Component {
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.topUserBtn}>
+                        <Icon name="form" color="#961B92" size={24}
+                            onPress={() => navigate('Report')} />
                         <Text
                             onPress={() => navigate('Report')}
 
@@ -82,63 +135,128 @@ export default class Main extends React.Component {
                     </TouchableOpacity>
 
                 </View>
+                
+
+            <View style={styles.topBtnContainer2}>
+
+                <TextInput
+                    style={{
+                        marginTop: 0,
+                        color: "#961B92",
+                        fontFamily: "SemiBold",
+                        paddingVertical: 5,
+                        paddingHorizontal: 5,
+                        fontSize: 15,
+                        flex: 1,
+                        marginRight: "auto",
+                        marginLeft: 10,
+                        textAlign: "left",
+
+                        flexDirection: "row",
+                        borderWidth: 2,
+                        marginTop: 0,
+                        paddingHorizontal: 5,
+                        borderColor: "#961B92",
+                        }}
+
+                        placeholder="Search..."
+                        placeholderTextColor="#961B92"
+                        onChangeText={this.updateSearch}
+                        value={this.state.search}
+
+                    >
+                </TextInput>
+                
+                
+                
+
+                <Icon onPress={() => {if(index != -1){
+                        this.setState({latitudePlace: points[index].latitude, longitudePlace: points[index].longitude});
+                    }}}
+
+                    style={{
+                        marginTop: 0,
+                        alignSelf: "center",
+                        color: "#961B92",
+                        fontFamily: "SemiBold",
+                        paddingVertical: 0,
+                        marginHorizontal: 10,
+                    }}
+                    
+                    name="search1" color="#961B92" size={28} />
+
+
+                <Icon onPress={() => this.setState({latitudePlace: this.state.latitude, longitudePlace: this.state.longitude})}
+                
+                    style={{
+                        marginTop: 0,
+                        alignSelf: "center",
+                        color: "#961B92",
+                        fontFamily: "SemiBold",
+                        paddingVertical: 0,
+                        marginHorizontal: 10,
+                    }}
+                    
+                    name="reload1" color="#961B92" size={28} />
+
+            </View>
+                    
+
 
                 <Text
                     style={{
                         marginTop: 0,
                         color: "#961B92",
                         fontFamily: "SemiBold",
-                        paddingVertical: 10,
+                        paddingVertical: 5,
                         paddingHorizontal: 10,
                         fontSize: 15
-                    }}>Tab to Places for Information</Text>
+                    }}>Tap to Places for Information</Text>
 
-                
-
-
+                               
                 <View style={styles.container}>
                 <MapView
-                style={styles.map}
-                region={{
-                    latitude: this.state.latitude,
-                    longitude: this.state.longitude,
-                    latitudeDelta: 0.015,
-                    longitudeDelta: 0.121
-                }}
-                >
+                        style={styles.map}
+                        region={{
+                            latitude: this.state.latitudePlace,
+                            longitude: this.state.longitudePlace,
+                            latitudeDelta: 0.015,
+                            longitudeDelta: 0.121
+                        }}
+                    >
 
-                <Marker 
-                coordinate={this.state} 
-                />
-              
-                <Marker 
-                coordinate={points[0]}
-                image={require('../images/marker.png')}
-                title="Place Name"
-                onCalloutPress={() => navigate('CurrentData')}  
-                >
-                <Callout><Text>Place Name 1</Text></Callout>
-                </Marker>
+                        <Marker
+                            coordinate={this.state}
+                        />
 
-                <Marker 
-                coordinate={points[1]}
-                image={require('../images/marker.png')}
-                title="Place Name"
-                onCalloutPress={() => console.log(2)}  
-                >
-                <Callout><Text>Place Name 2</Text></Callout>
-                </Marker>
+                        <Marker
+                            coordinate={points[0]}
+                            image={require('../images/marker.png')}
+                            title="Place Name"
+                            onCalloutPress={() => navigate('CurrentData')}
+                        >
+                            <Callout><Text>Place Name 1</Text></Callout>
+                        </Marker>
 
-                <Marker 
-                coordinate={points[2]}
-                image={require('../images/marker.png')}
-                title="Place Name"
-                onCalloutPress={() => console.log(3)}  
-                >
-                <Callout><Text>Place Name 3</Text></Callout>
-                </Marker>
-                </MapView> 
-            </View>
+                        <Marker
+                            coordinate={points[1]}
+                            image={require('../images/marker.png')}
+                            title="Place Name"
+                            onCalloutPress={() => console.log(2)}
+                        >
+                            <Callout><Text>Place Name 2</Text></Callout>
+                        </Marker>
+
+                        <Marker
+                            coordinate={points[2]}
+                            image={require('../images/marker.png')}
+                            title="Place Name"
+                            onCalloutPress={() => console.log(3)}
+                        >
+                            <Callout><Text>Place Name 3</Text></Callout>
+                        </Marker>
+                    </MapView>   
+                </View>
 
             </View>
         );
@@ -146,25 +264,32 @@ export default class Main extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    topBtnContainer2: {
+        marginHorizontal: 0,
+        paddingVertical: 2,
+        flexDirection: "row",
+        width: "100%"
+    },
     topBtnContainer: {
-        marginHorizontal: 30,
+        marginHorizontal: 0,
         paddingVertical: 10,
         flexDirection: "row",
-        justifyContent: "space-between",
-        width: "84%",
-        alignItems: "center"
+        width: "100%"
     },
     topUserBtn: {
-        backgroundColor: "#85847D",
+        backgroundColor: "white",
         borderRadius: 10,
-        padding: 10,
-        width: "25%"
+        paddingHorizontal: 18,
+        width: "35%",
+        flexDirection: "row",
+        justifyContent: 'space-between'
     },
     topBtnText: {
-        color: "white",
+        color: "#961B92",
         fontFamily: "SemiBold",
         textAlign: "center",
-        fontSize: 12
+        fontSize: 15,
+        paddingHorizontal: 10
     },
     detailsBtn: {
         alignSelf: "center",
@@ -178,7 +303,7 @@ const styles = StyleSheet.create({
         bottom: 0
     },
     map: {
-        height: '100%'
+        height: '90%'
     }
 
 });

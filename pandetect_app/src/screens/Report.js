@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Image, TextInput, TouchableOpacity, StyleSheet, Navbar } from 'react-native';
+import { Text, View, Image, TextInput, TouchableOpacity, StyleSheet, Navbar, Alert } from 'react-native';
 import Icon from '@expo/vector-icons/AntDesign';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
@@ -21,14 +21,27 @@ export default class Main extends React.Component {
                     <Icon name="back" color="#961B92" size={24}
                         onPress={() => navigate('Main')} />
                     <Text
+                        onPress={() => navigate('Main')}
                         style={{
                             fontSize: 25,
                             fontFamily: "SemiBold",
                             alignSelf: "center"
                         }}
                     >PANDETECT</Text>
-                    <Icon name="logout" color="#961B92" size={24}
-                        onPress={() => navigate('Login')} />
+                        <Icon name="logout" color="#961B92" size={24}
+                            onPress={() =>
+                                Alert.alert(
+                                    "Signing Out",
+                                    "Are you sure you want to sign out?",
+                                     [
+                                        {
+                                            text: "Cancel",
+                                            style: "cancel"
+                                        },
+                                        { text: "OK", onPress: () => navigate('Login') }
+                                     ]
+                                 )}
+                        />
                 </View>
 
                 <Text

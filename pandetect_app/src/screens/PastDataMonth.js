@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Image, TextInput, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { Text, View, Image, TextInput, TouchableOpacity, StyleSheet, Dimensions, Alert } from 'react-native';
 import Icon from '@expo/vector-icons/AntDesign';
 import {
     LineChart
@@ -26,6 +26,7 @@ export default class PastDataMonth extends React.Component {
                         <Icon name="back" color="#961B92" size={24}
                             onPress={() => navigate('CurrentData')} />
                         <Text
+                            onPress={() => navigate('Main')}
                             style={{
                                 fontSize: 25,
                                 fontFamily: "SemiBold",
@@ -33,7 +34,18 @@ export default class PastDataMonth extends React.Component {
                             }}
                         >PANDETECT</Text>
                         <Icon name="logout" color="#961B92" size={24}
-                            onPress={() => navigate('Login')} />
+                            onPress={() =>
+                                Alert.alert(
+                                    "Signing Out",
+                                    "Are you sure you want to sign out?",
+                                    [
+                                        {
+                                            text: "Cancel",
+                                            style: "cancel"
+                                        },
+                                        { text: "OK", onPress: () => navigate('Login') }
+                                    ]
+                                )} />
                     </View>
 
 
